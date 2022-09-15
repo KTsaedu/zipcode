@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2dcfdb14-00ef-4b5d-8262-562ed4ca906b" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="acf1bcce-30e8-446d-a9d7-982c632cb36e" >
+		<http:request-connection host="https://api.zippopotam.us" />
+	</http:request-config>
+	<flow name="zipcodeFlow" doc:id="a7fedd3d-2941-43f0-bb08-3ebf0e226b46" >
+		<http:listener doc:name="Listener" doc:id="c39c35c1-d99b-4456-aa31-d9825cda01aa" config-ref="HTTP_Listener_config" path="/us/33162"/>
+		<set-variable value="" doc:name="Set Variable" doc:id="87c2a798-4584-4fa5-9395-4fe7b52f4513" variableName="zippcode"/>
+		<http:request method="GET" doc:name="Request" doc:id="b7ca2d72-6c03-4744-8eca-4847d412d828" path="/us/{zipcode}" config-ref="HTTP_Request_configuration">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"zipcode" : "vars.zipcode"
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>
